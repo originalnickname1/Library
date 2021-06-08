@@ -5,7 +5,7 @@
 <head><title>Internet Library</title></head>
 <body>
 <h2>Welcome to Internet Library</h2>
-<form id="login_form" action="controller" method="post">
+<form id="login_form" action="controller" method="post"/>
 <input type="hidden" name="command" value="login"/>
 <input name ="login"/><br/>
 <input name = "password" type="password"/></br>

@@ -44,7 +44,7 @@ public class LoginCommand implements Command {
              * Methods are not finished
              */
             if (userRole == Role.ADMIN) {
-                forward = "admin.jsp";
+                forward = "/jsp/admin/admin_menu.jsp";
             }
             if (userRole == Role.LIBRARIAN) {
                 forward = "librarian.jsp";

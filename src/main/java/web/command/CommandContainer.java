@@ -17,6 +17,7 @@ public class CommandContainer {
         commands.put("register", new RegisterCommand());
         commands.put("greeting_page", new GreetingPageCommand());
         commands.put("noSuchCommand", new NoSuchCommand());
+        commands.put("admin/getAllUsers", new GetAllUsersCommand());
     }
 
     public static Command get(String commandName){

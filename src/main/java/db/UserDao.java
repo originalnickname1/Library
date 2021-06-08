@@ -4,10 +4,9 @@ import db.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao {
     private static final Logger log = LogManager.getLogger(UserDao.class);
@@ -20,6 +19,8 @@ public class UserDao {
             "delete from user where username='?'";
     private static final String DELETE_USER_BY_ID =
             "delete from user where id=?";
+    private static final String GET_ALL_USERS =
+            "select * from users";
 
 
     /**
@@ -104,6 +105,31 @@ public class UserDao {
             DBManager.getInstance().commitAndClose(con);
         }
         return false;
+    }
+    public static List<User> getAllUsers(){
+        List<User> users = new ArrayList<>();
+        User user;
+        Statement stmt;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(GET_ALL_USERS);
+            while (rs.next()){
+                user = returnExistedUser(rs);
+                users.add(user);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return users;
     }
 
     public static void createUser(
