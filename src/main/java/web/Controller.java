@@ -30,7 +30,7 @@ public class Controller extends HttpServlet {
         String commandName = req.getParameter("command");
         System.out.println("controller commandName ==> " + commandName);
         Command command = CommandContainer.get(commandName);
-        System.out.println("controller get command ==> " + command);
+        System.out.println("controller get command ==> " + command );
         String forward = command.execute(req,resp);
         if(forward!=null){
             RequestDispatcher dispatcher = req.getRequestDispatcher(forward);

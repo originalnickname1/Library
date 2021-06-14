@@ -26,7 +26,7 @@ public class LoginCommand implements Command {
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
             errorMessage = "Login/password cannot be empty";
-            request.setAttribute("errorMessage", errorMessage);
+            session.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage" + errorMessage);
             return forward;
         }
@@ -35,25 +35,22 @@ public class LoginCommand implements Command {
 
         if(user == null || !password.equals(user.getPassword())){
             errorMessage = "No user with such login/password";
-            request.setAttribute("errorMessage", errorMessage);
+            session.setAttribute("errorMessage", errorMessage);
             return forward;
         }else {
             Role userRole = Role.getRole(user);
 
-            /**
-             * Methods are not finished
-             */
             if (userRole == Role.ADMIN) {
-                forward = "/jsp/admin/admin_menu.jsp";
+                forward = "jsp/admin/admin_menu.jsp";
             }
             if (userRole == Role.LIBRARIAN) {
-                forward = "librarian.jsp";
+                forward = "/jsp/librarian/librarian_menu.jsp";
             }
             if (userRole == Role.USER) {
                 forward = "jsp/greeting_page.jsp";
             }
-            session.setAttribute("loggedUser",login);
-            session.setAttribute("userRole", userRole);
+            session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE,login);
+            session.setAttribute(CommandConstants.USER_ROLE_ATTRIBUTE, userRole);
         }
         return forward;
     }

@@ -13,11 +13,27 @@ public class CommandContainer {
     private static Map<String, Command> commands = new TreeMap<>();
 
     static{
+        //common commands
         commands.put("login", new LoginCommand());
         commands.put("register", new RegisterCommand());
-        commands.put("greeting_page", new GreetingPageCommand());
         commands.put("noSuchCommand", new NoSuchCommand());
-        commands.put("admin/getAllUsers", new GetAllUsersCommand());
+
+        //admin commands
+        commands.put("admin?getAllUsers", new GetAllUsersCommand());
+        commands.put("admin?showUserInfo",new ShowUserInfo());
+        commands.put("admin?editUser",new EditUserCommand());
+        commands.put("admin?deleteUser",new DeleteUserCommand());
+
+        //librarian commands
+        commands.put("librarian?createBook", new CreateBookCommand());
+
+        //user commands
+        commands.put("user?addBook",new AddBookToOrder());
+
+        //universal commands
+        commands.put("getAllBooks",new GetAllBooksCommand());
+        commands.put("showBookInfo",new ShowBookInfoCommand());
+        commands.put("logout",new LogoutCommand());
     }
 
     public static Command get(String commandName){

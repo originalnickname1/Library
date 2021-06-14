@@ -23,43 +23,43 @@ public class RegisterCommand implements Command {
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
 
-        User user;
         String errorMessage = null;
         String forward = "/jsp/error.jsp";
 
         if (login == null || password == null || firstName == null || lastName == null ||
                 login.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
             errorMessage = "All fields must be filled";
-            request.setAttribute("errorMessage", errorMessage);
+            session.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage" + errorMessage);
             return forward;
         }
-        new UserDao().createUser(login,password,firstName,lastName,3);
+
+        User user = UserDao.findUserByLogin(login);
+
+        if (user != null) {
+            if (user.getLogin().equals(login)) {
+                errorMessage = "User with such login is already exists!";
+                session.setAttribute("errorMessage", errorMessage);
+                return forward;
+            }
+        }
+
+        UserDao.createUser(login, password, firstName, lastName, 3);
         user = UserDao.findUserByLogin(login);
         System.out.println("user in register command after create and find = " + user);
-        log.trace("User " + login +  " created in a system.");
+        log.trace("User " + login + " created in a system.");
 
-        if(user == null){
+        if (user == null) {
             errorMessage = "Failed to create user";
-            request.setAttribute("errorMessage", errorMessage);
+            session.setAttribute("errorMessage", errorMessage); //?request.setAttribute??
             return forward;
-        }else {
+        } else {
             Role userRole = Role.getRole(user);
-
-            /**
-             * Methods are not finished
-             */
-            if (userRole == Role.ADMIN) {
-                forward = "admin.jsp";
-            }
-            if (userRole == Role.LIBRARIAN) {
-                forward = "librarian.jsp";
-            }
             if (userRole == Role.USER) {
                 forward = "jsp/greeting_page.jsp";
             }
-            session.setAttribute("loggedUser",login);
-            session.setAttribute("userRole", userRole);
+            session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE, login);
+            session.setAttribute(CommandConstants.USER_ROLE_ATTRIBUTE, userRole);
         }
         return forward;
     }

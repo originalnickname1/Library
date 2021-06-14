@@ -1,10 +1,13 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page session="true" %>
 <html>
 <head><title>Internet Library</title></head>
 <body>
 <h2>Welcome to Internet Library</h2>
+<form action="controller" method="get">
+<input type="hidden" name="command" value="getAllBooks"/>
+    <input value="Show All Books" type="submit" >
+</form>
 <form id="login_form" action="controller" method="post"/>
 <input type="hidden" name="command" value="login"/>
 <input name ="login"/><br/>

@@ -7,7 +7,7 @@ public class User extends Entity {
     private String password;
     private String firstName;
     private String lastName;
-    private String blocked;
+    private Integer blocked;
     private Integer roleId;
 
     public String getLogin() {
@@ -42,11 +42,11 @@ public class User extends Entity {
         this.lastName = lastName;
     }
 
-    public String getBlocked() {
+    public Integer getBlocked() {
         return blocked;
     }
 
-    public void setBlocked(String blocked) {
+    public void setBlocked(Integer blocked) {
         this.blocked = blocked;
     }
 

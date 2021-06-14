@@ -3,5 +3,7 @@
 <head>
 <body>
 <h1>ERROR!</h1>
+<h2>${sessionScope.errorMessage}</h2>
+
 </body>
 </head>

@@ -1,5 +1,6 @@
 package db;
 
+import db.entity.LibraryCard;
 import db.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,17 +12,68 @@ import java.util.List;
 public class UserDao {
     private static final Logger log = LogManager.getLogger(UserDao.class);
 
-    private static final String FIND_USER_BY_LOGIN =
-            "select * from users where login=?";
-    private static final String FIND_USER_BY_ID =
+    //sql select strings
+    private static final String SQL_GET_ALL_USERS =
+            "SELECT * FROM users";
+    private static final String SQL_FIND_USER_BY_ID =
             "SELECT * FROM users WHERE id=?";
-    private static final String DELETE_USER_BY_LOGIN =
-            "delete from user where username='?'";
-    private static final String DELETE_USER_BY_ID =
-            "delete from user where id=?";
-    private static final String GET_ALL_USERS =
-            "select * from users";
+    private static final String SQL_FIND_USER_BY_LOGIN =
+            "SELECT * FROM users WHERE login=?";
+    public static final String SQL_FIND_LIBRARY_CARD_BY_ID =
+            "SELECT * FROM library_cards WHERE users_id=?";
 
+    //sql delete strings
+    private static final String SQL_DELETE_USER_BY_ID =
+            "DELETE FROM users WHERE id=?";
+    private static final String SQL_DELETE_USER_BY_LOGIN =
+            "DELETE  FROM users WHERE login=?";
+    //sql insert strings
+    private static final String SQL_CREATE_USER =
+            "INSERT INTO users (login,password,first_name,last_name,roles_id) VALUES ( ?, ?, ?, ?, ? );";
+    private static final String SQL_CREATE_LIBRARY_CARD =
+            "INSERT INTO library_cards (users_id) VALUES (?)";
+    //sql update strings
+    private static final String SQL_UPDATE_USER =
+            "UPDATE users SET login = ?, password=?, first_name=?, last_name=?, blocked=?, roles_id=?  WHERE id = ?";
+    public static final String SQL_UPDATE_LIBRARY_CARD =
+            "UPDATE library_cards SET time_book_taken =?, fine=? WHERE id = ?";
+
+
+    /**
+     * Creates User and Library Card in database
+     *
+     * @param login
+     * @param password
+     * @param firstName
+     * @param lastName
+     * @param roleId
+     */
+    public static void createUser(
+            String login, String password, String firstName, String lastName, Integer roleId) {
+
+        PreparedStatement pstmt;
+        Connection con = null;
+        try {
+            /**
+             * Creates user in database
+             */
+            con = DBManager.getInstance().getConnection();
+            pstmt = con.prepareStatement(SQL_CREATE_USER);
+            pstmt.setString(1, login);
+            pstmt.setString(2, password);
+            pstmt.setString(3, firstName);
+            pstmt.setString(4, lastName);
+            pstmt.setInt(5, roleId);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to create user in UserDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
 
     /**
      * Searching for user by login
@@ -37,7 +89,7 @@ public class UserDao {
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            pstmt = con.prepareStatement(FIND_USER_BY_LOGIN);
+            pstmt = con.prepareStatement(SQL_FIND_USER_BY_LOGIN);
             pstmt.setString(1, login);
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -68,7 +120,7 @@ public class UserDao {
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            pstmt = con.prepareStatement(FIND_USER_BY_ID);
+            pstmt = con.prepareStatement(SQL_FIND_USER_BY_ID);
             pstmt.setInt(1, id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -84,28 +136,48 @@ public class UserDao {
         }
         return user;
     }
+    public static LibraryCard findLibraryCardById(Integer id) {
 
-    public static boolean deleteUserByLogin(String login) {
-        User user = null;
+        LibraryCard lc = null;
         PreparedStatement pstmt;
         ResultSet rs;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            pstmt = con.prepareStatement(DELETE_USER_BY_ID);
-            pstmt.setString(1, login);
+            pstmt = con.prepareStatement(SQL_FIND_LIBRARY_CARD_BY_ID);
+            pstmt.setInt(1, id);
             rs = pstmt.executeQuery();
+            while (rs.next()) {
+
+            }
             rs.close();
             pstmt.close();
-            return true;
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
             log.error("Failed to findUserByLogin in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }
-        return false;
+        return lc;
     }
+
+    public static void deleteUserById(Integer id) {
+        PreparedStatement pstmt;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            pstmt = con.prepareStatement(SQL_DELETE_USER_BY_ID);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to deleteUserById in UserDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+
     public static List<User> getAllUsers(){
         List<User> users = new ArrayList<>();
         User user;
@@ -115,7 +187,7 @@ public class UserDao {
         try {
             con = DBManager.getInstance().getConnection();
             stmt = con.createStatement();
-            rs = stmt.executeQuery(GET_ALL_USERS);
+            rs = stmt.executeQuery(SQL_GET_ALL_USERS);
             while (rs.next()){
                 user = returnExistedUser(rs);
                 users.add(user);
@@ -132,19 +204,21 @@ public class UserDao {
         return users;
     }
 
-    public static void createUser(
-            String login, String password, String firstName, String lastName, Integer roleId) {
+    public static void updateUser(
+            Integer id, String login, String password, String firstName, String lastName, Integer blocked, Integer roleId) {
 
         PreparedStatement pstmt;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
-            pstmt = con.prepareStatement(SQLFields.SQL_CREATE_USER);
+            pstmt = con.prepareStatement(SQL_UPDATE_USER);
             pstmt.setString(1, login);
             pstmt.setString(2, password);
             pstmt.setString(3, firstName);
             pstmt.setString(4, lastName);
-            pstmt.setInt(5, roleId);
+            pstmt.setInt(5,blocked);
+            pstmt.setInt(6, roleId);
+            pstmt.setInt(7,id);
             pstmt.executeUpdate();
             pstmt.close();
 
@@ -159,16 +233,16 @@ public class UserDao {
     private static User returnExistedUser(ResultSet rs) {
         try {
             User user = new User();
-            user.setId(rs.getInt(SQLFields.ENTITY_ID));
-            user.setLogin(rs.getString(SQLFields.ENTITY_LOGIN));
-            user.setPassword(rs.getString(SQLFields.ENTITY_PASSWORD));
-            user.setFirstName(rs.getString(SQLFields.ENTITY_FIRST_NAME));
-            user.setLastName(rs.getString(SQLFields.ENTITY_LAST_NAME));
-            user.setBlocked(rs.getString(SQLFields.ENTITY_BLOCKED));
-            user.setRoleId(rs.getInt(SQLFields.ENTITY_ROLES_ID));
+            user.setId(rs.getInt(SQLFields.USER_ID));
+            user.setLogin(rs.getString(SQLFields.USER_LOGIN));
+            user.setPassword(rs.getString(SQLFields.USER_PASSWORD));
+            user.setFirstName(rs.getString(SQLFields.USER_FIRST_NAME));
+            user.setLastName(rs.getString(SQLFields.USER_LAST_NAME));
+            user.setBlocked(rs.getInt(SQLFields.USER_BLOCKED));
+            user.setRoleId(rs.getInt(SQLFields.USER_ROLES_ID));
             return user;
         } catch (SQLException ex) {
-            log.error("Failed to create user in UserDAO#createUser" + ex);
+            log.debug("Failed to returnExistedUser in UserDAO#createUser" + ex);
         }
         return null;
     }

@@ -1,4 +1,147 @@
 package db;
 
+import db.entity.Book;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class BookDao {
+    private static final Logger log = LogManager.getLogger(BookDao.class);
+
+    private static final String SQL_FIND_BOOK_BY_TITLE =
+            "select * from books where title=?";
+    private static final String SQL_FIND_BOOK_BY_ID =
+            "SELECT * FROM books WHERE id=?";
+    private static final String SQL_DELETE_BOOK_BY_TITLE =
+            "delete from books where title='?'";
+    private static final String SQL_DELETE_BOOK_BY_ID =
+            "delete from books where id=?";
+    private static final String SQL_GET_ALL_BOOKS =
+            "select * from books";
+    public static final String SQL_CREATE_BOOK =
+            "INSERT INTO books (title,year_of_publish,author,edition,amount) VALUES (?,?,?,?,?)";
+
+    /**
+     * Searching for book by title
+     *
+     * @param title
+     * @return user if exists
+     */
+    public static Book findBookByTitle(String title) {
+
+        Book book = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            pstmt = con.prepareStatement(SQL_FIND_BOOK_BY_TITLE);
+            pstmt.setString(1, title);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                book = returnExistedBook(rs);
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return book;
+    }
+
+    public static Book findBookById(Integer bookId) {
+        Book book = null;
+        PreparedStatement pstmt;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            pstmt = con.prepareStatement(SQL_FIND_BOOK_BY_ID);
+            pstmt.setInt(1, bookId);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                book = returnExistedBook(rs);
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.debug("Failed to findBookById in bookdao! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return book;
+    }
+
+    public static List<Book> getAllBooks() {
+        List<Book> books = new ArrayList<>();
+        Book book;
+        Statement stmt;
+        ResultSet rs;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(SQL_GET_ALL_BOOKS);
+            while (rs.next()) {
+                book = returnExistedBook(rs);
+                books.add(book);
+            }
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+        return books;
+    }
+
+    public static void createBook(
+            String title, Integer yearOfPublish, String author, String edition, Integer amount) {
+
+        PreparedStatement pstmt;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            pstmt = con.prepareStatement(SQL_CREATE_BOOK);
+            pstmt.setString(1, title);
+            pstmt.setInt(2, yearOfPublish);
+            pstmt.setString(3, author);
+            pstmt.setString(4, edition);
+            pstmt.setInt(5, amount);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to get All books in bookDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+
+    private static Book returnExistedBook(ResultSet rs) {
+        try {
+            Book book = new Book();
+            book.setId(rs.getInt(SQLFields.BOOK_ID));
+            book.setTitle(rs.getString(SQLFields.BOOK_TITLE));
+            book.setYearOfPublish(rs.getInt(SQLFields.BOOK_YEAR_OF_PUBLISH));
+            book.setAuthor(rs.getString(SQLFields.BOOK_AUTHOR));
+            book.setEdition(rs.getString(SQLFields.BOOK_EDITION));
+            book.setAmount(rs.getInt(SQLFields.BOOK_AMOUNT));
+            return book;
+        } catch (SQLException ex) {
+            log.debug("Failed return existed book in bookdao" + ex);
+        }
+        return null;
+    }
 }
