@@ -3,9 +3,9 @@ package web.command;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class AddBookToOrder implements Command{
+public class GetAllOrdersById implements Command{
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        return null;
+       return null;
     }
 }

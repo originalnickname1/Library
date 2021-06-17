@@ -18,7 +18,7 @@ public class GetAllUsersCommand implements Command {
         if (userRole == Role.ADMIN) {
             List<User> users = UserDao.getAllUsers();
             request.setAttribute("allUsers", users);
-            forward = CommandConstants.ADMIN_GET_ALL_USERS_JSP;
+            forward = (CommandConstants.ADMIN_GET_ALL_USERS_JSP);
         }
         return forward;
     }

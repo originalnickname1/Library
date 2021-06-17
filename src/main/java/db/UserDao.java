@@ -31,7 +31,7 @@ public class UserDao {
     private static final String SQL_CREATE_USER =
             "INSERT INTO users (login,password,first_name,last_name,roles_id) VALUES ( ?, ?, ?, ?, ? );";
     private static final String SQL_CREATE_LIBRARY_CARD =
-            "INSERT INTO library_cards (users_id) VALUES (?)";
+            "INSERT INTO library_cards (users_id) VALUES(?)";
     //sql update strings
     private static final String SQL_UPDATE_USER =
             "UPDATE users SET login = ?, password=?, first_name=?, last_name=?, blocked=?, roles_id=?  WHERE id = ?";
@@ -71,6 +71,27 @@ public class UserDao {
             DBManager.getInstance().rollbackAndClose(con);
             log.error("Failed to create user in UserDAO! " + ex);
         } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+    public static void createLibraryCard(String userLogin) {
+        PreparedStatement pstmt;
+        Connection con = null;
+        User user = findUserByLogin(userLogin);
+        Integer userId = user.getId();
+        System.out.println("user id in createLibrarycard==> " + userId);
+        try {
+            con = DBManager.getInstance().getConnection();
+            System.out.println("user in createLibrarycard =>>" + user);
+            pstmt = con.prepareStatement(SQL_CREATE_LIBRARY_CARD);
+            pstmt.setInt(1, userId);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException ex){
+            DBManager.getInstance().rollbackAndClose(con);
+            log.debug("failed to create libr card in userdao! " + ex);
+
+        }finally {
             DBManager.getInstance().commitAndClose(con);
         }
     }

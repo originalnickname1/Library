@@ -58,8 +58,16 @@ public class RegisterCommand implements Command {
             if (userRole == Role.USER) {
                 forward = "jsp/greeting_page.jsp";
             }
-            session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE, login);
+            Integer userRoleId = user.getRoleId();
+            UserDao.createLibraryCard(login);
+            Integer userId = user.getId();
+            session.setAttribute("userRoleId",userRoleId);
+            session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE,login);
             session.setAttribute(CommandConstants.USER_ROLE_ATTRIBUTE, userRole);
+            System.out.println("userRole ==> " + userRole);
+            session.setAttribute("loggedUserBlocked",user.getBlocked());
+            System.out.println("user.getBlocked() ==> " + user.getBlocked());
+            session.setAttribute("userId",userId);
         }
         return forward;
     }

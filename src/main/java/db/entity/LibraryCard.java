@@ -3,14 +3,14 @@ package db.entity;
 public class LibraryCard extends Entity{
 
     private double fine;
-    private Integer users_id;
+    private Integer usersId;
 
     public Integer getUsers_id() {
-        return users_id;
+        return usersId;
     }
 
-    public void setUsers_id(Integer users_id) {
-        this.users_id = users_id;
+    public void setUsersId(Integer usersId) {
+        this.usersId = usersId;
     }
 
     public double getFine() {
@@ -25,7 +25,7 @@ public class LibraryCard extends Entity{
     public String toString() {
         return "LibraryCard{" +
                 "fine=" + fine +
-                ", users_id=" + users_id +
+                ", users_id=" + usersId +
                 '}';
     }
 }

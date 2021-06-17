@@ -1,7 +1,6 @@
 package web.command;
 
 import db.BookDao;
-import db.Role;
 import db.entity.Book;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +12,10 @@ public class GetAllBooksCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        Role userRole = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
+        //Role userRole = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
         String forward = CommandConstants.ERROR_JSP;
         List<Book> books = BookDao.getAllBooks();
+        System.out.println(books);
         request.setAttribute("allBooks", books);
         forward = "jsp/show_all_books.jsp";
         return forward;

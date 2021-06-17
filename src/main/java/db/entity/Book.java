@@ -5,8 +5,9 @@ public class Book extends Entity{
     private String title;
     private Integer yearOfPublish;
     private String author;
-    private String edition;
+    private String publisher;
     private Integer amount;
+    private String description;
 
     public String getTitle() {
         return title;
@@ -14,22 +15,6 @@ public class Book extends Entity{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getEdition() {
-        return edition;
-    }
-
-    public void setEdition(String edition) {
-        this.edition = edition;
     }
 
     public Integer getYearOfPublish() {
@@ -40,6 +25,22 @@ public class Book extends Entity{
         this.yearOfPublish = yearOfPublish;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
     public Integer getAmount() {
         return amount;
     }
@@ -48,14 +49,23 @@ public class Book extends Entity{
         this.amount = amount;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
                 "title='" + title + '\'' +
                 ", yearOfPublish=" + yearOfPublish +
                 ", author='" + author + '\'' +
-                ", edition='" + edition + '\'' +
+                ", publisher='" + publisher + '\'' +
                 ", amount=" + amount +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

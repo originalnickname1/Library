@@ -1,7 +1,6 @@
 package web.command;
 
 import db.BookDao;
-import db.entity.Book;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,41 +21,24 @@ public class CreateBookCommand implements Command {
         String author = request.getParameter("author");
         String edition = request.getParameter("edition");
         String amountStr = request.getParameter("amount");
+        String description = request.getParameter("description");
 
         String errorMessage = null;
         String forward = "/jsp/error.jsp";
 
-        if (title == null || yearOfPublishStr == null || author == null || edition == null || amountStr == null ||
-                title.isEmpty() || yearOfPublishStr.isEmpty() || author.isEmpty() || edition.isEmpty() || amountStr.isEmpty()) {
+        if (title == null || yearOfPublishStr == null || author == null || edition == null || amountStr == null || description ==null ||
+                title.isEmpty() || yearOfPublishStr.isEmpty() || author.isEmpty() || edition.isEmpty() || amountStr.isEmpty() || description.isEmpty()) {
             errorMessage = "All fields must be filled";
             session.setAttribute("errorMessage", errorMessage);
             log.error("errorMessage" + errorMessage);
             return forward;
         }
 
-        Book book = BookDao.findBookByTitle(title);
-        System.out.println("book in createbookcom ==> " + book);
-
-        if (book != null) {
-            System.out.println("book != null" + book != null);
-            if (book.getTitle().equals(title)) {
-                errorMessage = "Book with such title is already exists!";
-                session.setAttribute("errorMessage", errorMessage);
-                return forward;
-            }
-        }
-
         Integer amount = Integer.valueOf(amountStr);
         Integer yearOfPublish = Integer.valueOf(yearOfPublishStr);
-        BookDao.createBook(title, yearOfPublish, author, edition, amount);
-        book = BookDao.findBookByTitle(title);
+        BookDao.createBook(title, yearOfPublish, author, edition, amount,description);
         log.trace("Book " + title + " created in a system.");
         forward = "controller?command=getAllBooks";
-        if (book == null) {
-            errorMessage = "Failed to create book";
-            session.setAttribute("errorMessage", errorMessage); //?request.setAttribute??
-            return forward;
-        }
         return forward;
     }
 }

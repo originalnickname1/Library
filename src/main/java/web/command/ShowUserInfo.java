@@ -17,7 +17,7 @@ public class ShowUserInfo implements Command {
         System.out.println("editUserId id ind editusercommand =  " + userId);
         Role role = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
         String forward = CommandConstants.ERROR_JSP;
-        if (role == Role.ADMIN) {
+        if (role == Role.ADMIN || role==Role.USER) {
             User user = UserDao.findUserById(userId);
             session.setAttribute("getUserInfo", user);
             Role getUserInfoRole = Role.getRole(user);

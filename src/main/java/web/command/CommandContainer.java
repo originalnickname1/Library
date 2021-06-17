@@ -23,17 +23,28 @@ public class CommandContainer {
         commands.put("admin?showUserInfo",new ShowUserInfo());
         commands.put("admin?editUser",new EditUserCommand());
         commands.put("admin?deleteUser",new DeleteUserCommand());
+        commands.put("admin?updateBook", new EditBookCommand());
+        commands.put("admin?createBook", new CreateBookCommand());
+        commands.put("admin?deleteBook",new DeleteBookCommand());
 
         //librarian commands
-        commands.put("librarian?createBook", new CreateBookCommand());
+        commands.put("librarian?getAllOrders", new GetAllOrdersCommand());
+        commands.put("librarian?editOrder",new EditOrderCommand());
 
         //user commands
-        commands.put("user?addBook",new AddBookToOrder());
+        commands.put("user?createOrder",new CreateOrderCommand());
+        commands.put("showOrdersById",new ShowOrdersByUserIdCommand());
+        commands.put("showOrderInfo",new ShowOrderInfo());
 
         //universal commands
         commands.put("getAllBooks",new GetAllBooksCommand());
         commands.put("showBookInfo",new ShowBookInfoCommand());
         commands.put("logout",new LogoutCommand());
+        commands.put("sortByTitle",new SortBooksByTitleCommand());
+        commands.put("sortByAuthor",new SortBooksByAuthorCommand());
+        commands.put("sortByEdition",new SortBooksByEditionCommand());
+        commands.put("sortByYear",new SortBooksByYearCommand());
+        commands.put("findBook",new FindBookCommand());
     }
 
     public static Command get(String commandName){

@@ -11,11 +11,13 @@ public class ShowBookInfoCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        Integer bookId = Integer.valueOf(request.getParameter("bookId"));
+        String bId= (request.getParameter("bookId"));
+        System.out.println("Book id ==>" + bId);
+        Integer bookId = Integer.valueOf(bId);
         //Role role = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
         String forward = CommandConstants.ERROR_JSP;
         Book book = BookDao.findBookById(bookId);
-        session.setAttribute("gerBookInfo", book);
+        session.setAttribute("getBookInfo", book);
         forward = "/jsp/show_book_info.jsp";
         return forward;
     }

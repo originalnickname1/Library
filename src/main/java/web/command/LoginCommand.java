@@ -22,7 +22,7 @@ public class LoginCommand implements Command {
         String password = request.getParameter("password");
 
         String errorMessage = null;
-        String forward = "/jsp/error.jsp";
+        String forward = CommandConstants.ERROR_JSP;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
             errorMessage = "Login/password cannot be empty";
@@ -39,6 +39,7 @@ public class LoginCommand implements Command {
             return forward;
         }else {
             Role userRole = Role.getRole(user);
+            Integer userRoleId = user.getRoleId();
 
             if (userRole == Role.ADMIN) {
                 forward = "jsp/admin/admin_menu.jsp";
@@ -49,8 +50,14 @@ public class LoginCommand implements Command {
             if (userRole == Role.USER) {
                 forward = "jsp/greeting_page.jsp";
             }
+            Integer userId = user.getId();
+            session.setAttribute("userRoleId",userRoleId);
             session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE,login);
             session.setAttribute(CommandConstants.USER_ROLE_ATTRIBUTE, userRole);
+            System.out.println("userRole ==> " + userRole);
+            session.setAttribute("loggedUserBlocked",user.getBlocked());
+            System.out.println("user.getBlocked() ==> " + user.getBlocked());
+            session.setAttribute("userId",userId);
         }
         return forward;
     }

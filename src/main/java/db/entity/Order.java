@@ -1,13 +1,13 @@
 package db.entity;
 
-import java.sql.Date;
-
-public class Orders extends Entity{
-    private String status;
+public class Order extends Entity{
+    private String  status;
     private String type;
     private Integer libraryCardId;
-    private Date time_book_taken;
+    private String timeBookTaken;
+    private String timeBookShouldBeReturned;
     private Integer bookId;
+
 
     public String getStatus() {
         return status;
@@ -33,12 +33,20 @@ public class Orders extends Entity{
         this.libraryCardId = libraryCardId;
     }
 
-    public Date getTime_book_taken() {
-        return time_book_taken;
+    public String getTimeBookTaken() {
+        return timeBookTaken;
     }
 
-    public void setTime_book_taken(Date time_book_taken) {
-        this.time_book_taken = time_book_taken;
+    public void setTimeBookTaken(String timeBookTaken) {
+        this.timeBookTaken = timeBookTaken;
+    }
+
+    public String getTimeBookShouldBeReturned() {
+        return timeBookShouldBeReturned;
+    }
+
+    public void setTimeBookShouldBeReturned(String timeBookShouldBeReturned) {
+        this.timeBookShouldBeReturned = timeBookShouldBeReturned;
     }
 
     public Integer getBookId() {
@@ -49,14 +57,5 @@ public class Orders extends Entity{
         this.bookId = bookId;
     }
 
-    @Override
-    public String toString() {
-        return "Orders{" +
-                "status='" + status + '\'' +
-                ", type='" + type + '\'' +
-                ", libraryCardId=" + libraryCardId +
-                ", time_book_taken=" + time_book_taken +
-                ", bookId=" + bookId +
-                '}';
-    }
+
 }
