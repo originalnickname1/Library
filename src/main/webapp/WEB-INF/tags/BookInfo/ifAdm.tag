@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="book" type="db.entity.Book" required="true" %>
-<c:if test="${sessionScope.userRoleId==1}">
+<c:if test="${sessionScope.loggedUser.roleId==1}">
     <form action="controller" method="get">
         <input type="hidden" name="command" value="admin?updateBook"/>
        <input type="hidden" name="id" value="${getBookInfo.id}"><br/>

@@ -35,8 +35,10 @@ public class UserDao {
     //sql update strings
     private static final String SQL_UPDATE_USER =
             "UPDATE users SET login = ?, password=?, first_name=?, last_name=?, blocked=?, roles_id=?  WHERE id = ?";
-    public static final String SQL_UPDATE_LIBRARY_CARD =
-            "UPDATE library_cards SET time_book_taken =?, fine=? WHERE id = ?";
+    private static final String SQL_UPDATE_LIBRARY_CARD =
+            "UPDATE library_cards SET fine=? WHERE users_id =?";
+    private static Integer START_INT;
+    private static final Integer START_INT_VALUE = 0;
 
 
     /**
@@ -50,7 +52,7 @@ public class UserDao {
      */
     public static void createUser(
             String login, String password, String firstName, String lastName, Integer roleId) {
-
+        START_INT = START_INT_VALUE;
         PreparedStatement pstmt;
         Connection con = null;
         try {
@@ -59,11 +61,11 @@ public class UserDao {
              */
             con = DBManager.getInstance().getConnection();
             pstmt = con.prepareStatement(SQL_CREATE_USER);
-            pstmt.setString(1, login);
-            pstmt.setString(2, password);
-            pstmt.setString(3, firstName);
-            pstmt.setString(4, lastName);
-            pstmt.setInt(5, roleId);
+            pstmt.setString(++START_INT, login);
+            pstmt.setString(++START_INT, password);
+            pstmt.setString(++START_INT, firstName);
+            pstmt.setString(++START_INT, lastName);
+            pstmt.setInt(++START_INT, roleId);
             pstmt.executeUpdate();
             pstmt.close();
 
@@ -74,10 +76,11 @@ public class UserDao {
             DBManager.getInstance().commitAndClose(con);
         }
     }
-    public static void createLibraryCard(String userLogin) {
+
+    public static void createLibraryCard(User user) {
+        START_INT = START_INT_VALUE;
         PreparedStatement pstmt;
         Connection con = null;
-        User user = findUserByLogin(userLogin);
         Integer userId = user.getId();
         System.out.println("user id in createLibrarycard==> " + userId);
         try {
@@ -87,11 +90,10 @@ public class UserDao {
             pstmt.setInt(1, userId);
             pstmt.executeUpdate();
             pstmt.close();
-        } catch (SQLException ex){
+        } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
             log.debug("failed to create libr card in userdao! " + ex);
-
-        }finally {
+        } finally {
             DBManager.getInstance().commitAndClose(con);
         }
     }
@@ -103,7 +105,7 @@ public class UserDao {
      * @return user if exists
      */
     public static User findUserByLogin(String login) {
-
+        START_INT = START_INT_VALUE;
         User user = null;
         PreparedStatement pstmt;
         ResultSet rs;
@@ -111,7 +113,7 @@ public class UserDao {
         try {
             con = DBManager.getInstance().getConnection();
             pstmt = con.prepareStatement(SQL_FIND_USER_BY_LOGIN);
-            pstmt.setString(1, login);
+            pstmt.setString(++START_INT, login);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 user = returnExistedUser(rs);
@@ -134,7 +136,7 @@ public class UserDao {
      * @return user if exists
      */
     public static User findUserById(Integer id) {
-
+        START_INT = START_INT_VALUE;
         User user = null;
         PreparedStatement pstmt;
         ResultSet rs;
@@ -142,7 +144,7 @@ public class UserDao {
         try {
             con = DBManager.getInstance().getConnection();
             pstmt = con.prepareStatement(SQL_FIND_USER_BY_ID);
-            pstmt.setInt(1, id);
+            pstmt.setInt(++START_INT, id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 user = returnExistedUser(rs);
@@ -151,14 +153,15 @@ public class UserDao {
             pstmt.close();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to findUserById in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }
         return user;
     }
-    public static LibraryCard findLibraryCardById(Integer id) {
 
+    public static LibraryCard findLibraryCardById(Integer id) {
+        START_INT = START_INT_VALUE;
         LibraryCard lc = null;
         PreparedStatement pstmt;
         ResultSet rs;
@@ -166,7 +169,7 @@ public class UserDao {
         try {
             con = DBManager.getInstance().getConnection();
             pstmt = con.prepareStatement(SQL_FIND_LIBRARY_CARD_BY_ID);
-            pstmt.setInt(1, id);
+            pstmt.setInt(++START_INT, id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
 
@@ -175,7 +178,7 @@ public class UserDao {
             pstmt.close();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to findLibraryCardById in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }
@@ -183,12 +186,13 @@ public class UserDao {
     }
 
     public static void deleteUserById(Integer id) {
+        START_INT = START_INT_VALUE;
         PreparedStatement pstmt;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
             pstmt = con.prepareStatement(SQL_DELETE_USER_BY_ID);
-            pstmt.setInt(1, id);
+            pstmt.setInt(++START_INT, id);
             pstmt.executeUpdate();
             pstmt.close();
         } catch (SQLException ex) {
@@ -199,7 +203,8 @@ public class UserDao {
         }
     }
 
-    public static List<User> getAllUsers(){
+    public static List<User> getAllUsers() {
+        START_INT = START_INT_VALUE;
         List<User> users = new ArrayList<>();
         User user;
         Statement stmt;
@@ -209,7 +214,7 @@ public class UserDao {
             con = DBManager.getInstance().getConnection();
             stmt = con.createStatement();
             rs = stmt.executeQuery(SQL_GET_ALL_USERS);
-            while (rs.next()){
+            while (rs.next()) {
                 user = returnExistedUser(rs);
                 users.add(user);
             }
@@ -218,7 +223,7 @@ public class UserDao {
 
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to getAllUsers in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }
@@ -228,24 +233,44 @@ public class UserDao {
     public static void updateUser(
             Integer id, String login, String password, String firstName, String lastName, Integer blocked, Integer roleId) {
 
+        START_INT = START_INT_VALUE;
         PreparedStatement pstmt;
         Connection con = null;
         try {
             con = DBManager.getInstance().getConnection();
             pstmt = con.prepareStatement(SQL_UPDATE_USER);
-            pstmt.setString(1, login);
-            pstmt.setString(2, password);
-            pstmt.setString(3, firstName);
-            pstmt.setString(4, lastName);
-            pstmt.setInt(5,blocked);
-            pstmt.setInt(6, roleId);
-            pstmt.setInt(7,id);
+            pstmt.setString(++START_INT, login);
+            pstmt.setString(++START_INT, password);
+            pstmt.setString(++START_INT, firstName);
+            pstmt.setString(++START_INT, lastName);
+            pstmt.setInt(++START_INT, blocked);
+            pstmt.setInt(++START_INT, roleId);
+            pstmt.setInt(++START_INT, id);
             pstmt.executeUpdate();
             pstmt.close();
 
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to updateUser in UserDAO! " + ex);
+        } finally {
+            DBManager.getInstance().commitAndClose(con);
+        }
+    }
+    public static void updateFine(Integer id,Integer fine) {
+        START_INT = START_INT_VALUE;
+        PreparedStatement pstmt;
+        Connection con = null;
+        try {
+            con = DBManager.getInstance().getConnection();
+            pstmt = con.prepareStatement(SQL_UPDATE_LIBRARY_CARD);
+            pstmt.setInt(1, fine);
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (SQLException ex) {
+            DBManager.getInstance().rollbackAndClose(con);
+            log.error("Failed to updateFine in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }

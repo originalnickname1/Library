@@ -3,6 +3,7 @@ package web.command;
 import db.OrderDao;
 import db.Role;
 import db.entity.Order;
+import db.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +18,9 @@ public class ShowOrdersByUserIdCommand implements Command {
         String errorMessage = null;
         String message = "List Of Orders : ";
 
-        Integer userId = (Integer) session.getAttribute("userId");
-        Role role = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
+        User user = (User) session.getAttribute("loggedUser");
+        Integer userId = user.getId();
+        Role role = Role.getRole(user);
         if (role == null) {
             errorMessage = CommandConstants.ACCESS_DENIED;
             session.setAttribute("errorMessage", errorMessage);

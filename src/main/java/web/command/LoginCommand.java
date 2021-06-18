@@ -30,7 +30,7 @@ public class LoginCommand implements Command {
             log.error("errorMessage" + errorMessage);
             return forward;
         }
-        User user = new UserDao().findUserByLogin(login);
+        User user = UserDao.findUserByLogin(login);
         log.trace("User " + login +  " logged into a system.");
 
         if(user == null || !password.equals(user.getPassword())){
@@ -40,24 +40,10 @@ public class LoginCommand implements Command {
         }else {
             Role userRole = Role.getRole(user);
             Integer userRoleId = user.getRoleId();
-
-            if (userRole == Role.ADMIN) {
-                forward = "jsp/admin/admin_menu.jsp";
-            }
-            if (userRole == Role.LIBRARIAN) {
-                forward = "/jsp/librarian/librarian_menu.jsp";
-            }
-            if (userRole == Role.USER) {
-                forward = "jsp/greeting_page.jsp";
-            }
-            Integer userId = user.getId();
-            session.setAttribute("userRoleId",userRoleId);
-            session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE,login);
-            session.setAttribute(CommandConstants.USER_ROLE_ATTRIBUTE, userRole);
-            System.out.println("userRole ==> " + userRole);
+            forward = CommandConstants.GREETING_PAGE;
+            session.setAttribute("loggedUser",user);
             session.setAttribute("loggedUserBlocked",user.getBlocked());
             System.out.println("user.getBlocked() ==> " + user.getBlocked());
-            session.setAttribute("userId",userId);
         }
         return forward;
     }

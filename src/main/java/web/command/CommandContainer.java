@@ -17,6 +17,8 @@ public class CommandContainer {
         commands.put("login", new LoginCommand());
         commands.put("register", new RegisterCommand());
         commands.put("noSuchCommand", new NoSuchCommand());
+        commands.put("toIndexJsp", new ToIndexJspPageCommand());
+        commands.put("toRegisterJsp",new ToRegisterPageCommand());
 
         //admin commands
         commands.put("admin?getAllUsers", new GetAllUsersCommand());
@@ -35,6 +37,9 @@ public class CommandContainer {
         commands.put("user?createOrder",new CreateOrderCommand());
         commands.put("showOrdersById",new ShowOrdersByUserIdCommand());
         commands.put("showOrderInfo",new ShowOrderInfo());
+        commands.put("showProfile",new ShowProfileCommand());
+        commands.put("user?editProfile",new EditProfileCommand());
+        commands.put("user?payFine",new PayFineCommand());
 
         //universal commands
         commands.put("getAllBooks",new GetAllBooksCommand());
@@ -45,6 +50,7 @@ public class CommandContainer {
         commands.put("sortByEdition",new SortBooksByEditionCommand());
         commands.put("sortByYear",new SortBooksByYearCommand());
         commands.put("findBook",new FindBookCommand());
+        commands.put("toMainPage",new ToMainPageCommand());
     }
 
     public static Command get(String commandName){

@@ -1,10 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
+<my:head/><br/>
 <h1>All Books</h1>
 <form action="controller" method="get">
 Sort by:<select name = "command">

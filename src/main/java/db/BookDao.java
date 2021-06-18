@@ -51,7 +51,7 @@ public class BookDao {
             pstmt.close();
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to findBookByTitle in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }
@@ -80,7 +80,7 @@ public class BookDao {
 
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to updateBook in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }

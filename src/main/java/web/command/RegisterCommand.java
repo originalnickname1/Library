@@ -1,6 +1,5 @@
 package web.command;
 
-import db.Role;
 import db.UserDao;
 import db.entity.User;
 import org.apache.logging.log4j.LogManager;
@@ -54,17 +53,10 @@ public class RegisterCommand implements Command {
             session.setAttribute("errorMessage", errorMessage); //?request.setAttribute??
             return forward;
         } else {
-            Role userRole = Role.getRole(user);
-            if (userRole == Role.USER) {
-                forward = "jsp/greeting_page.jsp";
-            }
-            Integer userRoleId = user.getRoleId();
-            UserDao.createLibraryCard(login);
+            UserDao.createLibraryCard(user);
             Integer userId = user.getId();
-            session.setAttribute("userRoleId",userRoleId);
-            session.setAttribute(CommandConstants.USER_LOGGED_USER_ATTRIBUTE,login);
-            session.setAttribute(CommandConstants.USER_ROLE_ATTRIBUTE, userRole);
-            System.out.println("userRole ==> " + userRole);
+            forward = CommandConstants.GREETING_PAGE;
+            session.setAttribute("loggedUser",user);
             session.setAttribute("loggedUserBlocked",user.getBlocked());
             System.out.println("user.getBlocked() ==> " + user.getBlocked());
             session.setAttribute("userId",userId);

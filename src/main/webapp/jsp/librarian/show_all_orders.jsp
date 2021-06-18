@@ -6,6 +6,7 @@
     <title>All Orders</title>
 </head>
 <body>
+<my:head/><br/>
 <h1>All Orders</h1>
 </form><br/>
 <c:forEach var="order" items="${requestScope.allOrders}">
@@ -16,6 +17,6 @@
     </br>
 </c:forEach>
 <br/>
-<my:logout/>
+
 </body>
 </html>

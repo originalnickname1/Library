@@ -21,6 +21,8 @@ public class OrderDao {
     public static final String SQL_UPDATE_ORDER =
             "UPDATE orders SET status = ?, type = ?, time_book_taken=?, time_book_should_be_returned=?, books_id=?  WHERE id = ?";
 
+    private static final Integer FINE_AMOUNT = 100;
+
     private static final Logger log = LogManager.getLogger(OrderDao.class);
 
     public static List<Order> getAllOrders() {
@@ -42,7 +44,7 @@ public class OrderDao {
 
         } catch (SQLException ex) {
             DBManager.getInstance().rollbackAndClose(con);
-            log.error("Failed to findUserByLogin in UserDAO! " + ex);
+            log.error("Failed to getAllOrders in UserDAO! " + ex);
         } finally {
             DBManager.getInstance().commitAndClose(con);
         }
@@ -72,7 +74,7 @@ public class OrderDao {
     }
 
     public static Order findOrderById(Integer orderId) {
-       Order order = null;
+        Order order = null;
         PreparedStatement pstmt;
         ResultSet rs;
         Connection con = null;
@@ -94,6 +96,7 @@ public class OrderDao {
         }
         return order;
     }
+
     public static void updateOrder(
             Integer id, String status, String type, Integer bookId) {
 
@@ -108,7 +111,7 @@ public class OrderDao {
             pstmt.setString(3, String.valueOf(timeBookTaken));
             LocalDateTime timeBookShouldBeReturned = timeBookTaken.plusHours(24);
             pstmt.setString(4, String.valueOf(timeBookShouldBeReturned));
-            pstmt.setInt(5,bookId);
+            pstmt.setInt(5, bookId);
             pstmt.setInt(6, id);
             pstmt.executeUpdate();
             pstmt.close();
@@ -120,6 +123,7 @@ public class OrderDao {
             DBManager.getInstance().commitAndClose(con);
         }
     }
+
     public static List<Order> findOrderByUserId(Integer userId) {
         Order order = null;
         List<Order> orders = new ArrayList<>();
@@ -144,6 +148,43 @@ public class OrderDao {
             DBManager.getInstance().commitAndClose(con);
         }
         return orders;
+    }
+
+    public static Integer getUserFine(Integer id) {
+        Integer fine = 0;
+        List<Order> orders = findOrderByUserId(id);
+        for (Order order : orders) {
+            String status = order.getStatus();
+            System.out.println("status in getUserFine==> " + status);
+            if (status.equals("CONFIRMED")) {
+                LocalDateTime timeShouldReturned = LocalDateTime.parse(order.getTimeBookShouldBeReturned());
+                LocalDateTime now = LocalDateTime.now();
+                if (now.isAfter(timeShouldReturned)) {
+                    fine = fine + FINE_AMOUNT;
+                }
+            }
+        }
+        UserDao.updateFine(id,fine);
+        return fine;
+    }
+
+    public static void closeOrdersByUsersId(Integer id) {
+        List<Order> orders = findOrderByUserId(id);
+        Integer fine = getUserFine(id);
+        for (Order order : orders) {
+            String status = order.getStatus();
+            if (status.equals("CONFIRMED")) {
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime timeShouldReturned = LocalDateTime.parse(order.getTimeBookShouldBeReturned());
+                System.out.println("timeShouldReturned ========>" + timeShouldReturned);
+                if (now.isAfter(timeShouldReturned)) {
+                    System.out.println("now is after");
+                    updateOrder(order.getId(),"CLOSED",order.getType(),order.getBookId());
+                    fine = fine - FINE_AMOUNT;
+                }
+            }
+        }
+        UserDao.updateFine(id,fine);
     }
 
     private static Order returnExistedOrder(ResultSet rs) {

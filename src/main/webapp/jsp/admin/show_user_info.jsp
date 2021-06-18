@@ -5,10 +5,9 @@
 
 <html>
 <body>
+<my:head/><br/>
 <h2>User Info:</h2>
     <edit:editIfAdm user="${getUserInfo}"/>
-    <edit:editIfUser user="${getUserInfo}"/>
 <br/>
-<my:logout/>
 </body>
 </html>

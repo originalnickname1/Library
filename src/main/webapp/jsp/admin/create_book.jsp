@@ -6,6 +6,7 @@
 </head>
 <body>
 <h2>Create Book Page</h2>
+<my:head/><br/>
 <form action="../../controller" method="post"/>
 <input type="hidden" name="command" value="admin?createBook"/>
 Title:<input name="title"/><br/>
@@ -15,6 +16,6 @@ Edition:<input name="edition"/><br/>
 Amount:<input name="amount"/><br/>
 Description:<input name="description"><br/>
 <input value="Create Book" type="submit"/>
-<my:logout/><br/>
+<br/>
 </body>
 </html>

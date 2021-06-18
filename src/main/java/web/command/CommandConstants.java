@@ -6,7 +6,6 @@ public final class CommandConstants {
     public final static String ADMIN_GET_ALL_USERS_JSP = "/jsp/admin/all_users.jsp";
     public static final String JSP_ADMIN_PATH = "jsp/admin/";
     public static final String SHOW_ALL_USERS_JSP = "all_users.jsp";
-    public static final String USER_MENU_JSP = "jsp/user/user_menu.jsp";
     public static final String INDEX_JSP = "index.jsp";
     public static final String GREETING_PAGE = "jsp/greeting_page.jsp";
     //messages

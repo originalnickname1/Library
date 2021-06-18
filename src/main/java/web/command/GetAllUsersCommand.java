@@ -13,7 +13,8 @@ public class GetAllUsersCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        Role userRole = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
+        User user = (User) session.getAttribute("loggedUser");
+        Role userRole = Role.getRole(user);
         String forward = CommandConstants.ERROR_JSP;
         if (userRole == Role.ADMIN) {
             List<User> users = UserDao.getAllUsers();

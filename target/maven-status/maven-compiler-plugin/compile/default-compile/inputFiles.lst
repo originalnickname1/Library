@@ -5,10 +5,13 @@ C:\MyProjects\Library\src\main\java\db\BookDao.java
 C:\MyProjects\Library\src\main\java\db\entity\Entity.java
 C:\MyProjects\Library\src\main\java\web\command\GetAllOrdersById.java
 C:\MyProjects\Library\src\main\java\web\command\LogoutCommand.java
+C:\MyProjects\Library\src\main\java\web\command\ToIndexJspPageCommand.java
 C:\MyProjects\Library\src\main\java\web\command\RegisterCommand.java
 C:\MyProjects\Library\src\main\java\db\Role.java
+C:\MyProjects\Library\src\main\java\web\command\DeleteProfileCommand.java
 C:\MyProjects\Library\src\main\java\web\command\LoginCommand.java
 C:\MyProjects\Library\src\main\java\db\SQLFields.java
+C:\MyProjects\Library\src\main\java\web\command\ToMainPageCommand.java
 C:\MyProjects\Library\src\main\java\web\command\DeleteUserCommand.java
 C:\MyProjects\Library\src\main\java\web\filter\SecurityFilter.java
 C:\MyProjects\Library\src\main\java\web\command\SortBooksByTitleCommand.java
@@ -19,6 +22,7 @@ C:\MyProjects\Library\src\main\java\web\command\GetAllBooksCommand.java
 C:\MyProjects\Library\src\main\java\web\command\SortBooksByYearCommand.java
 C:\MyProjects\Library\src\main\java\web\Controller.java
 C:\MyProjects\Library\src\main\java\db\DBManager.java
+C:\MyProjects\Library\src\main\java\web\command\ShowProfileCommand.java
 C:\MyProjects\Library\src\main\java\db\entity\LibraryCard.java
 C:\MyProjects\Library\src\main\java\db\entity\User.java
 C:\MyProjects\Library\src\main\java\web\command\DeleteBookCommand.java
@@ -34,8 +38,11 @@ C:\MyProjects\Library\src\main\java\web\command\ShowBookInfoCommand.java
 C:\MyProjects\Library\src\main\java\web\command\NoSuchCommand.java
 C:\MyProjects\Library\src\main\java\web\command\EditUserCommand.java
 C:\MyProjects\Library\src\main\java\db\OrderDao.java
+C:\MyProjects\Library\src\main\java\web\command\EditProfileCommand.java
 C:\MyProjects\Library\src\main\java\db\Blocked.java
 C:\MyProjects\Library\src\main\java\web\command\CreateOrderCommand.java
 C:\MyProjects\Library\src\main\java\web\command\SortBooksByAuthorCommand.java
 C:\MyProjects\Library\src\main\java\web\command\GetAllOrdersCommand.java
 C:\MyProjects\Library\src\main\java\web\command\CommandContainer.java
+C:\MyProjects\Library\src\main\java\web\command\PayFineCommand.java
+C:\MyProjects\Library\src\main\java\web\command\ToRegisterPageCommand.java

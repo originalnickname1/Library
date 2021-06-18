@@ -15,10 +15,15 @@ public class ShowUserInfo implements Command {
         HttpSession session = request.getSession();
         Integer userId = Integer.valueOf(request.getParameter("userId"));
         System.out.println("editUserId id ind editusercommand =  " + userId);
-        Role role = (Role) session.getAttribute(CommandConstants.USER_ROLE_ATTRIBUTE);
+        User user = (User) session.getAttribute("loggedUser");
+        Role role = Role.getRole(user);
         String forward = CommandConstants.ERROR_JSP;
-        if (role == Role.ADMIN || role==Role.USER) {
-            User user = UserDao.findUserById(userId);
+        if (role != Role.ADMIN) {
+            String errorMessage = CommandConstants.ACCESS_DENIED;
+            session.setAttribute("errorMessage", errorMessage);
+            return forward;
+        } else {
+            user = UserDao.findUserById(userId);
             session.setAttribute("getUserInfo", user);
             Role getUserInfoRole = Role.getRole(user);
             Blocked getUserInfoBlocked = Blocked.getBlocked(user);
@@ -26,6 +31,7 @@ public class ShowUserInfo implements Command {
             session.setAttribute("getUserInfoBlocked", getUserInfoBlocked);
             forward = "/jsp/admin/show_user_info.jsp";
         }
+
         return forward;
     }
 }
