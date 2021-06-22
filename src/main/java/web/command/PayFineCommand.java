@@ -13,6 +13,7 @@ public class PayFineCommand implements Command {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedUser");
         System.out.println("user in payFIne Command ==>" + user);
+
         OrderDao.closeOrdersByUsersId(user.getId());
         String forward = "controller?command=showProfile&userId="+user.getId();
         return forward;

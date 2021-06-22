@@ -172,7 +172,7 @@ public class UserDao {
             pstmt.setInt(++START_INT, id);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-
+                lc = returnExistedLibraryCard(rs);
             }
             rs.close();
             pstmt.close();
@@ -287,6 +287,17 @@ public class UserDao {
             user.setBlocked(rs.getInt(SQLFields.USER_BLOCKED));
             user.setRoleId(rs.getInt(SQLFields.USER_ROLES_ID));
             return user;
+        } catch (SQLException ex) {
+            log.debug("Failed to returnExistedUser in UserDAO#createUser" + ex);
+        }
+        return null;
+    }
+    private static LibraryCard returnExistedLibraryCard(ResultSet rs) {
+        try {
+           LibraryCard libraryCard = new LibraryCard();
+           libraryCard.setId(rs.getInt("users_id"));
+           libraryCard.setFine(rs.getInt("fine"));
+           return libraryCard;
         } catch (SQLException ex) {
             log.debug("Failed to returnExistedUser in UserDAO#createUser" + ex);
         }

@@ -173,6 +173,7 @@ public class OrderDao {
         Integer fine = getUserFine(id);
         for (Order order : orders) {
             String status = order.getStatus();
+            Integer bookId = order.getBookId();
             if (status.equals("CONFIRMED")) {
                 LocalDateTime now = LocalDateTime.now();
                 LocalDateTime timeShouldReturned = LocalDateTime.parse(order.getTimeBookShouldBeReturned());

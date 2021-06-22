@@ -2,7 +2,7 @@ package db.entity;
 
 public class LibraryCard extends Entity{
 
-    private double fine;
+    private Integer fine;
     private Integer usersId;
 
     public Integer getUsers_id() {
@@ -13,11 +13,11 @@ public class LibraryCard extends Entity{
         this.usersId = usersId;
     }
 
-    public double getFine() {
+    public Integer getFine() {
         return fine;
     }
 
-    public void setFine(double fine) {
+    public void setFine(Integer fine) {
         this.fine = fine;
     }
 
