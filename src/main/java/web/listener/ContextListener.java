@@ -52,14 +52,10 @@ public class ContextListener implements ServletContextListener {
      */
 
     public void contextInitialized(ServletContextEvent event) {
-        // obtain file name with locales descriptions
+
         ServletContext context = event.getServletContext();
         String localesFileName = context.getInitParameter("locales");
-
-        // obtain reale path on server
         String localesFileRealPath = context.getRealPath(localesFileName);
-
-        // locad descriptions
         Properties locales = new Properties();
         try {
             locales.load(new FileInputStream(localesFileRealPath));
@@ -67,7 +63,6 @@ public class ContextListener implements ServletContextListener {
             e.printStackTrace();
         }
 
-        // save descriptions to servlet context
         context.setAttribute("locales", locales);
         locales.list(System.out);
     }

@@ -16,9 +16,14 @@ public class ShowOrdersByUserIdCommand implements Command {
         HttpSession session = request.getSession();
         String forward = CommandConstants.ERROR_JSP;
         String errorMessage = null;
+        User user = (User) session.getAttribute("loggedUser");
+        if (user == null) {
+            errorMessage = CommandConstants.ACCESS_DENIED;
+            session.setAttribute("errorMessage", errorMessage);
+            return forward;
+        }
         String message = "List Of Orders : ";
 
-        User user = (User) session.getAttribute("loggedUser");
         Integer userId = user.getId();
         Role role = Role.getRole(user);
         if (role == null) {

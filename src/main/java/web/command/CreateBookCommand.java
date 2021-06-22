@@ -1,6 +1,7 @@
 package web.command;
 
 import db.BookDao;
+import db.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,8 +15,14 @@ public class CreateBookCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-
-
+        User user = (User) session.getAttribute("loggedUser");
+        String forward = "/jsp/error.jsp";
+        String errorMessage = null;
+        if(user==null || user.getRoleId()!=1){
+            errorMessage = CommandConstants.ACCESS_DENIED;
+            session.setAttribute("errorMessage",errorMessage);
+            return forward;
+        }
         String title = request.getParameter("title");
         String yearOfPublishStr = request.getParameter("year_of_publish");
         String author = request.getParameter("author");
@@ -23,8 +30,6 @@ public class CreateBookCommand implements Command {
         String amountStr = request.getParameter("amount");
         String description = request.getParameter("description");
 
-        String errorMessage = null;
-        String forward = "/jsp/error.jsp";
 
         if (title == null || yearOfPublishStr == null || author == null || edition == null || amountStr == null || description ==null ||
                 title.isEmpty() || yearOfPublishStr.isEmpty() || author.isEmpty() || edition.isEmpty() || amountStr.isEmpty() || description.isEmpty()) {

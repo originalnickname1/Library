@@ -167,7 +167,6 @@ public class OrderDao {
         UserDao.updateFine(id,fine);
         return fine;
     }
-
     public static void closeOrdersByUsersId(Integer id) {
         List<Order> orders = findOrderByUserId(id);
         Integer fine = getUserFine(id);

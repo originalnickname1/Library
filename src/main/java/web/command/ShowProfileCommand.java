@@ -15,8 +15,14 @@ public class ShowProfileCommand implements Command{
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedUser");
-        Role role = Role.getRole(user);
         String forward = CommandConstants.ERROR_JSP;
+        String errorMessage;
+        if (user == null) {
+            errorMessage = CommandConstants.ACCESS_DENIED;
+            session.setAttribute("errorMessage", errorMessage);
+            return forward;
+        }
+        Role role = Role.getRole(user);
         if (role != null) {
             user = UserDao.findUserById(user.getId());
             Integer fine = OrderDao.getUserFine(user.getId());

@@ -15,6 +15,13 @@ public class ShowBooksOnUsersAccount implements Command{
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedUser");
+        String forward = CommandConstants.ERROR_JSP;
+        String errorMessage = null;
+        if (user == null) {
+            errorMessage = CommandConstants.ACCESS_DENIED;
+            session.setAttribute("errorMessage", errorMessage);
+            return forward;
+        }
         Integer userId = user.getId();
         List<Order> orders = OrderDao.findOrderByUserId(userId);
         List<Order> confirmedOrders = new ArrayList<>();

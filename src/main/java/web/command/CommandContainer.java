@@ -41,7 +41,8 @@ public class CommandContainer {
         commands.put("user?editProfile",new EditProfileCommand());
         commands.put("user?payFine",new PayFineCommand());
         commands.put("user?returnBook",new ReturnBookCommand());
-        commands.put("showBooksOnAcc", new ShowBooksOnUsersAccount());
+        commands.put("showBooksOnAcc",new ShowBooksOnUsersAccount());
+        commands.put("user?deleteProfile",new DeleteProfileCommand());
 
         //universal commands
         commands.put("getAllBooks",new GetAllBooksCommand());

@@ -16,22 +16,28 @@ public class ShowUserInfo implements Command {
         Integer userId = Integer.valueOf(request.getParameter("userId"));
         System.out.println("editUserId id ind editusercommand =  " + userId);
         User user = (User) session.getAttribute("loggedUser");
-        Role role = Role.getRole(user);
         String forward = CommandConstants.ERROR_JSP;
+        if (user == null) {
+            String errorMessage = CommandConstants.ACCESS_DENIED;
+            session.setAttribute("errorMessage", errorMessage);
+            return forward;
+        }
+        Role role = Role.getRole(user);
         if (role != Role.ADMIN) {
             String errorMessage = CommandConstants.ACCESS_DENIED;
             session.setAttribute("errorMessage", errorMessage);
             return forward;
-        } else {
-            user = UserDao.findUserById(userId);
-            session.setAttribute("getUserInfo", user);
-            Role getUserInfoRole = Role.getRole(user);
-            Blocked getUserInfoBlocked = Blocked.getBlocked(user);
-            session.setAttribute("getUserInfoRole", getUserInfoRole);
-            session.setAttribute("getUserInfoBlocked", getUserInfoBlocked);
-            forward = "/jsp/admin/show_user_info.jsp";
         }
+        user = UserDao.findUserById(userId);
+        session.setAttribute("getUserInfo", user);
+        Role getUserInfoRole = Role.getRole(user);
+        Blocked getUserInfoBlocked = Blocked.getBlocked(user);
+        session.setAttribute("getUserInfoRole", getUserInfoRole);
+        session.setAttribute("getUserInfoBlocked", getUserInfoBlocked);
+        forward = "/jsp/admin/show_user_info.jsp";
+
 
         return forward;
+
     }
 }
